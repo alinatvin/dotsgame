@@ -8,7 +8,8 @@ let rayDensity = 0.5; // Angle step (increase for more rays)
 let redCircleCount = 0;
 let message = "";
 let circleCount
-
+let startTime;
+let timerDuration = 10000; // 15 seconds in milliseconds
 function preload() {
  
 }
@@ -17,7 +18,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   textSize(32);
   textAlign(CENTER, CENTER);
-
+  startTime = millis(); // Start the timer
 
   const gridSpacingX = (width - spacing * (rectangleCount + 1)) / rectangleCount; // Horizontal grid spacing
   const gridSpacingY = (height - spacing * (rectangleCount + 1)) / rectangleCount; // Vertical grid spacing
@@ -113,13 +114,24 @@ function setup() {
 function draw() {
   background(0); // Background color
   text(message, width / 2, height / 2); 
+let elapsedTime = millis() - startTime; // Calculate elapsed time
+  let remainingTime = max(0, timerDuration - elapsedTime); // Time left
 
+  // Display the timer
+  fill(255);
+  textSize(16);
+  textAlign(RIGHT, RIGHT);
+  text(`Time Left: ${(remainingTime / 1000).toFixed(1)}s`, width / 2 - 20, 32);
+
+
+  // Display the message in the center
+  text(message, width / 2, height / 2);
   let insideRectangle = false;
   // Display the count of red circles in the upper-left corner
    fill(255); // White color for the text
-  textSize(32);
-  textAlign(CENTER, CENTER);
-  text(message, width / 2, height / 2); // Display the message
+ if (remainingTime === 0) {
+    message = "Game Over";
+  }
 
   //text(`Red Circles: ${redCircleCount}`, 20, 20);
   // Draw all rectangles with their boundaries
@@ -147,6 +159,8 @@ function draw() {
   redCircleCount = circles.filter(circle => circle.color && circle.color.levels[0] === 255 && circle.color.levels[1] === 0 && circle.color.levels[2] === 0).length;
 
   }
+  
+  
 }
 
 /////////////////////////////////////////////// Rectangle Class
